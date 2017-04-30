@@ -1,0 +1,211 @@
+#pragma once
+#include <iostream>
+using namespace std;
+
+typedef int Dato;
+
+#ifndef _NODO_H
+#define _NODO_H
+class Nodo
+{
+private:
+	Dato dato;
+	Nodo *enlace;
+public:
+
+	Nodo(Dato t)
+	{
+		dato = t;
+		enlace = 0; //cero es el puntero NULL en c++
+	}
+	Nodo(Dato p, Nodo *n) //crea el nodo y lo enlaza a n
+	{
+		dato = p;
+		enlace = n;
+	}
+	Dato datoNodo() const
+	{
+		return dato;
+	}
+	Nodo *enlaceNodo() const
+	{
+		return enlace;
+	}
+	void ponerEnlace(Nodo *sgte)
+	{
+		enlace = sgte;
+	}
+};
+#endif
+
+#pragma once
+#include "Nodo.h"
+class Iterador
+{
+	Nodo *aux;
+public:
+	Iterador(Nodo* aux = nullptr) : aux(aux) {}
+	void avanzar() { aux = aux->enlaceNodo(); }
+	bool diferente(Iterador it) { return aux != it.aux; }
+	Dato obtener() { return aux->datoNodo(); }
+	Iterador inicia() { return Iterador(); }
+};
+
+#pragma once
+#include "Iterador.h"
+class Lista
+{
+private:
+	Nodo *primero;
+public:
+	int n;
+	Lista() : n(0){ primero = nullptr;}
+	void crearLista();
+	void insertarCabezaLista(Dato entrada);
+	void insertarUltimo(Dato entrada);
+	void insertarLista(Nodo *anteiror, Dato entrada);
+	Nodo* buscarLista(Dato destino);
+	//int retornaPos(Dato destino);
+	void eliminar(Dato entrada);
+	Nodo *ultimo();
+	void visualizar();
+};
+
+void Lista::crearLista() {
+	int x;
+	primero = 0;
+	cout << "Termina con -1" << endl;
+	do {
+		cin >> x;
+		if (x != -1)
+		{
+			primero = new Nodo(x, primero);
+		}
+	} while (x != -1);
+}
+void Lista::insertarCabezaLista(Dato entrada)
+{
+	Nodo *nuevo = new Nodo(entrada);
+	nuevo->ponerEnlace(primero); //enlaza nuevo con primero
+	primero = nuevo; //mueve primero y apunta al nuevo nodo
+}
+void Lista::insertarUltimo(Dato entrada)
+{
+	Nodo *ultimo = this->ultimo();
+	ultimo->ponerEnlace(new Nodo(entrada));
+}
+Nodo* Lista::ultimo()
+{
+	Nodo *p = primero;
+	if (p == NULL) throw "Error, lista vacia";
+	while (p->enlaceNodo() != NULL) p = p->enlaceNodo();
+	return p;
+}
+void Lista::insertarLista(Nodo *anterior, Dato entrada)
+{
+	Nodo *nuevo;
+	nuevo = new Nodo(entrada);
+	nuevo->ponerEnlace(anterior->enlaceNodo());
+	anterior->ponerEnlace(nuevo);
+}
+Nodo *Lista::buscarLista(Dato destino)
+{
+	Nodo *indice;
+	for (indice = primero; indice != NULL; indice = indice->enlaceNodo(), n++)
+		if (destino == indice->datoNodo())
+			return indice;
+	return NULL;
+}
+//int Lista::retornaPos(Dato destino)
+//{
+//	
+//}
+void Lista::visualizar()
+{
+	Nodo *n;
+	int k = 0;
+	n = primero;
+	while (n != NULL)
+	{
+		char c;
+		k++; c = (k % 15 != 0 ? ' ' : '\n');
+		cout << n->datoNodo() << c;
+		n = n->enlaceNodo();
+	}
+}
+void Lista::eliminar(Dato entrada)
+{
+	Nodo *actual, *anterior;
+	bool encontrado;
+
+	actual = primero;
+	anterior = NULL;
+	encontrado = false;
+	//busqueda del nodo y del anterior
+	while ((actual != NULL) && !encontrado)
+	{
+		encontrado = (actual->datoNodo() == entrada);
+		if (!encontrado)
+		{
+			anterior = actual;
+			actual = actual->enlaceNodo();
+		}
+	}
+	//enlace del nodo anterior con el siguiente
+	if (actual != NULL)
+	{
+		//distingue entre cabecera y el resto de la lista
+		if (actual == primero)
+		{
+			primero = actual->enlaceNodo();
+		}
+		else
+		{
+			anterior->ponerEnlace(actual->enlaceNodo());
+		}
+		delete actual;
+	}
+}
+
+#include "Lista.h"
+
+int main()
+{
+	Lista *objLista = new Lista();
+	Nodo *objNodo;
+	int opcion;
+	bool abre = true;
+	Dato entrada, destino, anteriore;
+
+	while (abre)
+	{
+		cout << "\nGestor de Listas\n******************\n";
+		cout << "1.- Crear Lista\n";
+		cout << "2.- Agregar al inicio\n";
+		cout << "3.- Agregar al ultimo\n";
+		cout << "4.- Agregar en posicion\n";
+		cout << "5.- Buscar nodo por dato\n";
+		cout << "6.- eliminar por dato\n";
+		cout << "7.- Visualizar\n";
+		cout << "8.- Cerrar\n";
+		cout << "opcion "; cin >> opcion;
+
+		switch (opcion)
+		{
+		case 1: objLista->crearLista(); objLista->ultimo(); break;
+		case 2: cin >> entrada; objLista->insertarCabezaLista(entrada); break;
+		case 3: cin >> entrada; objLista->insertarUltimo(entrada); break;
+		case 4: cout << "Agregue dato de entrada: "; cin >> entrada; cout << endl;
+			cout << "Agregue dato anterior: "; 
+			cin >> anteriore; objLista->insertarLista(objLista->buscarLista(anteriore), entrada); break;
+		case 5: cin >> destino; cout << "La posicion del dato elegido es : "; objLista->buscarLista(destino); 
+			cout << " " << objLista->n; break;
+		case 6: cin >> entrada; objLista->eliminar(entrada); break;
+		case 7: objLista->visualizar(); break;
+		case 8: cout << "Hasta pronto!\n"; abre = false; break;
+		}
+	}
+
+	system("pause");
+	return 0;
+}
