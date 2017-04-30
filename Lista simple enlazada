@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef _LISTA_H_
 #define _LISTA_H_
 
@@ -9,12 +8,12 @@ class ListaSE {
 	struct Nodo {
 		T elem;
 		Nodo *next;
-		Nodo(T elem = 0, Nodo *next = nullptr) :elem(elem), next(next) {}
+		Nodo(T elem = 0, Nodo *next = nullptr) : elem(elem), next(next) {}
 	};
 	Nodo *inicio;
 	int n;
 public:
-	class Iterador {
+	class Iterador{
 		Nodo* aux;
 	public:
 		Iterador(Nodo* aux = nullptr) : aux(aux) {}
@@ -23,7 +22,7 @@ public:
 		T operator *() { return aux->elem; }
 	};
 public:
-	ListaSE() :n(0), inicio(nullptr) {}
+	ListaSE() : n(0), inicio(nullptr) {}
 	~ListaSE() {
 		while (inicio != nullptr) {
 			Nodo *aux = inicio;
@@ -31,28 +30,35 @@ public:
 			delete aux;
 		}
 	}
-	Iterador inicial() {
+	Iterador inicial()
+	{
 		return Iterador(inicio);
 	}
-	Iterador ultimo() {
+	Iterador ultimo()
+	{
 		return Iterador(nullptr);
 	}
-	int tamannio() {
+
+	int tamannio()
+	{
 		return n;
 	}
-	bool insertarInicio(T elem) {
+	bool insertarInicio(T elem)
+	{
 		Nodo *nuevo = new Nodo(elem, inicio);
 		if (nuevo == nullptr) return false;
 		inicio = nuevo;
 		++n;
 		return true;
 	}
-	bool insertarPOS(T elem, int pos) {
+	bool insertarPOS(T elem, int pos)
+	{
 		if (pos < 0 || pos > n) return false;
 		if (pos == 0) insertarInicio(elem);
-		Nodo *aux = inicio;
 		int c = 1;
-		while (c++ < pos) {
+		Nodo *aux = inicio;
+		while (c++ < pos)
+		{
 			aux = aux->next;
 		}
 		Nodo *nuevo = new Nodo(elem, aux->next);
@@ -60,24 +66,28 @@ public:
 		++n;
 		return true;
 	}
-	bool insertarFinal(T elem) {
-		insertarPOS(elem, n); return true;
+	bool insertarFinal(T elem)
+	{
+		insertarPOS(elem, n);
+		return true;
 	}
-	bool eliminarInicio() {
+	bool eliminarInicio()
+	{
 		if (n == 0) return false;
-		Nodo *aux = inicio;
+		Nodo * aux = inicio;
 		inicio = inicio->next;
 		delete aux;
 		--n;
 		return true;
 	}
-	bool eliminarPOS(int pos) {
+	bool eliminarPOS(int pos)
+	{
 		if (pos < 0 || pos > n) return false;
-		if (n == 0) return false;
 		if (pos == 0) eliminarInicio();
+		if (n == 0) return false;
+		int c = 1;
 		Nodo *aux = inicio;
 		if (n == 1) { delete aux; return true; }
-		int c = 1;
 		while (c++ < pos)
 		{
 			aux = aux->next;
@@ -88,9 +98,23 @@ public:
 		--n;
 		return true;
 	}
-	bool eliminarFinal() {
+	bool eliminarFinal()
+	{
 		if (n == 0) return false;
-		eliminarPOS(n - 1); return true;
+		eliminarPOS(n - 1);
+		return true;
+	}
+	T buscarPOS(int pos)
+	{
+		if (n == 0) return false;
+		if (pos < 0 || pos > n) return false;
+		Nodo *aux = inicio;
+		int c = 1;
+		while (c++ <= pos)
+		{
+			aux = aux->next;
+		}
+		return aux->elem;
 	}
 };
 #endif
@@ -100,31 +124,37 @@ public:
 
 using namespace std;
 
-ostream& operator << (ostream& os, ListaSE<int>& l) {
+ostream& operator << (ostream& os, ListaSE<int>&l)
+{
 	os << "[ ";
 	bool ini = true;
 	ListaSE<int>::Iterador it;
-	for (it = l.inicial(); it != l.ultimo(); it++) {
-		os << (ini ? "" : ", ") << *it;
+	for (it = l.inicial(); it != l.ultimo(); it++)
+	{
+		os << (ini ? "" : " ") << *it;
 		ini = false;
 	}
 	os << " ]";
 	return os;
 }
 
-int main() {
+int main()
+{
 	ListaSE<int> l;
 	for (int i = 0; i < 10; i++)
 	{
 		l.insertarInicio(i);
 	}
-	l.eliminarFinal();
 	l.eliminarInicio();
-	l.eliminarPOS(2);
-	l.insertarInicio(3);
-	l.insertarFinal(8);
-	l.insertarPOS(9, 4);
+	l.eliminarPOS(3);
+	l.eliminarFinal();
+	l.insertarInicio(2);
+	l.insertarPOS(3, 3);
+	l.insertarFinal(14);
+
 	cout << l << endl;
-	getchar();
+
+	cout << l.buscarPOS(2) << endl;
+	system("pause");
 	return 0;
 }
