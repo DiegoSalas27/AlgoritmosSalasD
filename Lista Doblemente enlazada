@@ -45,7 +45,7 @@ public:
 	bool insertarInicio(T elemento) {
 		Nodo *nuevo = new Nodo(elemento, inicio, nullptr);
 		if (nuevo == nullptr) return false;
-		if (inicio == nullptr) { inicio = ultimo = nuevo; return true; }
+		if (inicio == nullptr) { inicio = ultimo = nuevo; ++n; return true; }
 		inicio->prev = nuevo;
 		inicio = nuevo;
 		++n;
