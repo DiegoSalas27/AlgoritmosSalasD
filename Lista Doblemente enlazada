@@ -1,0 +1,119 @@
+#pragma once
+
+template <class T>
+
+class ListaDE {
+	struct Nodo {
+		T data;
+		Nodo *prev;
+		Nodo * next;
+		Nodo(T data = 0, Nodo *next = nullptr, Nodo *prev = nullptr) :data(data), next(next), prev(prev) {}
+		
+	};
+public:
+	Nodo *inicio;
+	Nodo *ultimo;
+	int n;
+public:
+	class Iterador {
+		Nodo *aux;
+	public:
+		Iterador(Nodo *aux = nullptr) :aux(aux) {}
+		void operator --(int dummy) { aux = aux->prev; }
+		bool operator != (Iterador it) { return aux != it.aux; }
+		T operator *() { return aux->data; }
+	};
+public:
+	ListaDE() :n(0), inicio(nullptr), ultimo(nullptr) {}
+	~ListaDE() {
+		while (inicio != nullptr) {
+			Nodo *aux = inicio;
+			inicio = inicio->next;
+			inicio->prev = nullptr;
+			delete aux;
+		}
+	}
+	Iterador inicial() {
+		return Iterador(inicio->prev);
+	}
+	Iterador ultimito() {
+		return Iterador(ultimo);
+	}
+	int tamannio() {
+		return n;
+	}
+	bool insertarInicio(T elemento) {
+		Nodo *nuevo = new Nodo(elemento, inicio, nullptr);
+		if (nuevo == nullptr) return false;
+		if (inicio == nullptr) { inicio = ultimo = nuevo; return true; }
+		inicio->prev = nuevo;
+		inicio = nuevo;
+		++n;
+		return true;	
+	}
+	void ImprimirAlInicio() {
+		Nodo *temp = inicio;
+		while (temp != nullptr)
+		{
+			if(temp == inicio)
+			cout << "[ " << temp->data << ", ";
+
+			if(temp != ultimo && temp != inicio)
+			cout << temp->data << ", ";
+
+			if (temp == ultimo)
+			cout << temp->data;
+
+			temp = temp->next;
+		}
+		cout << " ]" << endl;
+	}
+	void ImprimirAlReves() {
+		Nodo *temp = ultimo;
+		while (temp != nullptr)
+		{
+			if(temp == ultimo)
+			cout << "[ " << temp->data << ", ";
+
+			if(temp != inicio && temp != ultimo)
+			cout << temp->data << ", ";
+
+			if (temp == inicio)
+			cout << temp->data;
+
+			temp = temp->prev;
+		}
+		cout << " ]" << endl;
+	}
+};
+
+#include <iostream>
+#include "Lista.h"
+
+using namespace std;
+
+ostream& operator << (ostream& os, ListaDE<int>&l) {
+	os << "[ ";
+	bool ini = true;
+	ListaDE<int>::Iterador it;
+	for (it = l.ultimito(); it != l.inicial(); it--) {
+		os << (ini ? "" : ", ") << *it;
+		ini = false;
+	}
+	os << " ]";
+	return os;
+}
+
+int main()
+{
+	ListaDE<int>l;
+	for (int i = 0; i < 10; i++) {
+		l.insertarInicio(i);
+	}
+	l.ImprimirAlInicio();
+	l.ImprimirAlReves();
+
+	cout << l << endl;
+	system("pause");
+	return 0;
+}
