@@ -118,7 +118,7 @@ public:
 		while (c++ <= pos) {
 			aux = aux->next;
 		}
-		return aux->elemento;
+		return aux->data;
 
 	}
 	void ImprimirAlInicio() {
@@ -191,6 +191,9 @@ int main()
 	l.ImprimirAlReves();
 
 	cout << l << endl;
+
+	cout << l.buscarObjeto(2);
+
 	system("pause");
 	return 0;
 }
