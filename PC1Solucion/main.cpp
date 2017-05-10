@@ -137,7 +137,6 @@ int main()
 {
 	gestorCliente *gc = new gestorCliente();
 	Orden *oOrden;
-	gc->leerDatos();
 
 	string nom, ap, prod;
 	long dni, num;
@@ -196,6 +195,7 @@ int main()
 			return 0;
 			break;
 		case 8:
+			gc->leerDatos();
 			gc->mostrarDatos();
 			break;
 		}
