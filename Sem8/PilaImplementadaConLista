@@ -1,0 +1,54 @@
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+
+class Lista{
+	struct Nodo{
+		T elem;
+		Nodo *next;
+		Nodo(T elem = 0, Nodo *next = NULL):elem(elem), next(next){}
+	};
+	Nodo *inicio;
+	int n;
+	public:
+		Lista(): inicio(NULL), n(0){}
+		void prepend(T elem){
+			inicio = new Nodo(elem, inicio);
+			++n;
+		}
+		void mostrarRec(){
+			_mostrarRec(inicio);
+		}
+		void mostrarRep(){
+			T *pila = new T[n];
+			int front = 0;
+			Nodo *aux = inicio;
+			while(aux != NULL){
+				pila[front++] = aux->elem;
+				aux = aux->next;
+			}
+			while(front != 0){
+				cout << pila[--front] << " ";
+			}
+			delete []pila;
+		}
+		private:
+			void _mostrarRec(Nodo *aux){
+				if(aux != NULL){
+					_mostrarRec(aux->next);
+					cout << aux->elem << " ";
+				}
+			}
+};
+int main()
+{
+	Lista<int>*l = new Lista<int>;
+	for(int i = 0; i < 10; i++)
+	{
+		l->prepend(i);
+	}
+	l->mostrarRep();
+	return 0;
+}
