@@ -1,0 +1,62 @@
+#include <iostream>
+#define SIZE 10
+
+void push(int);
+void pop();
+void mostrar();
+
+int stack[SIZE], top = -1;
+
+int main()
+{
+	int valor, eleccion;
+	system("cls");
+	while(1)
+	{
+		printf("\n\n***MENU***\n");
+		printf("1.- Push\n2.- Pop\n3.- Mostrar\n4.- Salir");
+		printf("\nElija opcion: ");
+		scanf("%d", &eleccion);
+		switch(eleccion)
+		{
+			case 1: printf("\nIngrese el valor a insertar: ");
+			scanf("%d", &valor);
+			push(valor);
+			break;
+			case 2: pop(); break;
+			case 3: mostrar(); break;
+			case 4: return 0;
+			default: printf("\nSeleccion incorrecta! Intente de nuevo");
+		}
+	}
+	return 0;
+}
+void push(int value){
+	if(top == SIZE - 1)
+	printf("\nLa insercion no es posible, la pila esta llena!");
+	else
+	{
+		top++;
+		stack[top] = value;
+		printf("\nElemento insertado");
+	}
+}
+void pop(){
+	if(top == -1)
+	printf("\nNo hay elementos en la pila!");
+	else
+	{
+		printf("\nSe elimino: %d", stack[top]);
+		top--;
+	}
+}
+void mostrar(){
+	if(top == -1)
+	printf("No hay elementos en la pila!");
+	else{
+		int i;
+		printf("Los elementos en la pila son: \n");
+		for(i = top; i >=0; i--)
+		printf("%d ", stack[i]);
+	}
+}
