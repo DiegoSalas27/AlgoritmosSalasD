@@ -1,5 +1,10 @@
 #include <iostream>
 #include <string>
+/* *
+   **
+   ***
+   ****
+   ***** */
 
 using namespace std;
 //Imprimir Triangulo de 5 * 5
